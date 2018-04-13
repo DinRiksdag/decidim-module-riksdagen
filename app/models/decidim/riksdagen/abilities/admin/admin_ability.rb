@@ -8,7 +8,7 @@ module Decidim
         # Intended to be used with `cancancan`.
         class AdminAbility < Decidim::Abilities::AdminAbility
           def define_abilities
-            # can :manage, SomeResource
+            can :manage, Riksdagen
           end
         end
       end
