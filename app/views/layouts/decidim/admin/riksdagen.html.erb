@@ -1,0 +1,19 @@
+<% content_for :secondary_nav do %>
+  <div class="secondary-nav">
+    <div class="secondary-nav__title">
+      <%= t('decidim.admin.riksdagen.title') %>
+    </div>
+    <ul>
+      <li <% if is_active_link?(root_path) && !is_active_link?(bills_url) %> class="is-active" <% end %>>
+        <%= link_to t("menu.representatives", scope: "decidim.admin"), root_path %>
+      </li>
+      <li <% if is_active_link?(bills_url) %> class="is-active" <% end %>>
+        <%= link_to t("menu.bills", scope: "decidim.admin"), bills_url %>
+      </li>
+    </ul>
+  </div>
+<% end %>
+
+<%= render "layouts/decidim/admin/application" do %>
+  <%= yield %>
+<% end %>

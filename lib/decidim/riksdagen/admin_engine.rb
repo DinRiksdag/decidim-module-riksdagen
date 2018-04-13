@@ -15,13 +15,10 @@ module Decidim
       end
 
       routes do
-        # Add admin engine routes here
-        # resources :riksdagen do
-        #   collection do
-        #     resources :exports, only: [:create]
-        #   end
-        # end
-        # root to: "riksdagen#index"
+        get '', to: 'riksdagen#index'
+
+
+        root to: "riksdagen#index"
       end
 
       initializer "decidim_riksdagen.admin_assets" do |app|
