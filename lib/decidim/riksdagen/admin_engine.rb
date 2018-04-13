@@ -16,6 +16,8 @@ module Decidim
 
       routes do
         get '', to: 'riksdagen#index'
+        post 'import_representative', to: 'riksdagen#import_representative'
+        post 'import_all', to: 'riksdagen#import_all'
 
 
         root to: "riksdagen#index"

@@ -1,6 +1,17 @@
 ---
 en:
   decidim:
-    components:
+    admin:
+      menu:
+        riksdagen: Riksdagen
+        representatives: Representatives
+        bills: Bills
       riksdagen:
-        name: Riksdagen
+        title: Riksdagen
+        representative:
+          title: Representatives
+          import_all: Import all
+          import: Import
+          reload: Reload
+          name: Name
+          status: Status
