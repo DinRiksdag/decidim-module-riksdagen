@@ -21,7 +21,7 @@ module Decidim
 
       initializer "decidim_riksdagen.inject_abilities_to_user" do |_app|
         Decidim.configure do |config|
-          config.abilities += ["Decidim::Riksdagen::Abilities::CurrentUserAbility"]
+          config.abilities += ["Decidim::Riksdagen::Abilities::Admin::AdminAbility"]
         end
       end
     end
