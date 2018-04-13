@@ -5,15 +5,3 @@ locales: [en, sv]
 
 ignore_unused:
   - "decidim.components.riksdagen.name"
-
-ignore_missing:
-  - decidim.participatory_processes.scopes.global
-
-data:
-  ## Translations are read from the file system. Supported format: YAML, JSON.
-  ## Provide a custom adapter:
-  # adapter: I18n::Tasks::Data::FileSystem
-
-  # Locale files or `File.find` patterns where translations are read from:
-  read:
-    - decidim-*/config/locales/%{locale}.yml
