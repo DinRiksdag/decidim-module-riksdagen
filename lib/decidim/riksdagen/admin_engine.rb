@@ -19,6 +19,9 @@ module Decidim
         post 'import_representative', to: 'riksdagen#import_representative'
         post 'import_all', to: 'riksdagen#import_all'
 
+        get 'bills', to: 'bills#index', as: :bills
+        post 'import_bill', to: 'bills#import_bill'
+        post 'import_all', to: 'bills#import_all'
 
         root to: "riksdagen#index"
       end

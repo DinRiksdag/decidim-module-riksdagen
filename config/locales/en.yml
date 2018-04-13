@@ -15,3 +15,27 @@ en:
           reload: Reload
           name: Name
           status: Status
+        bill:
+          title: Bills
+          import_all: Import all
+          import: Import
+          reload: Reload
+          name: Name
+          date: Publication date
+          status: Status
+    riksdagen:
+      representative:
+        mp: Member of parliament
+      bill:
+        step:
+          proposal: Government proposal
+          citizen_proposals: Citizen proposals
+          commission: Commission
+          debate: Chamber debate
+          vote: Vote
+
+
+
+
+
+

@@ -1,0 +1,37 @@
+
+<div class="card">
+  <div class="card-divider">
+    <h2 class="card-title">
+      <%= t('decidim.admin.riksdagen.bill.title')%>
+    </h2>
+  </div>
+  <div class="card-section">
+    <%= link_to t("decidim.admin.riksdagen.bill.import_all"), import_all_path, { class: "button small", method: :post } %>
+    <div class="table-scroll">
+      <table class="table-list">
+        <thead>
+          <tr>
+            <th><%= t('decidim.admin.riksdagen.bill.name') %></th>
+            <th><%= t('decidim.admin.riksdagen.bill.date') %></th>
+            <th><%= t('decidim.admin.riksdagen.bill.status') %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for bill in @bills %>
+          <tr>
+            <td><%= bill['titel'] %></td>
+            <td><%= Time.parse(bill['systemdatum']).strftime('%e/%-m %H:%M') %></td>
+            <td class="table-list__actions">
+              <% if bill['already_imported'] %>
+                <%= icon_link_to "reload", import_bill_path(bill_id: bill['id']), t('decidim.admin.riksdagen.bill.reload'), { class: "icon-cloud-download", method: :post } %>
+              <% else %>
+                <%= icon_link_to "plus", import_bill_path(bill_id: bill['id']), t('decidim.admin.riksdagen.bill.import'), { class: "icon-cloud-download", method: :post } %>
+              <% end %>
+            </td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

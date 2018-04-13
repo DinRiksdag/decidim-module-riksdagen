@@ -1,0 +1,41 @@
+---
+sv:
+  decidim:
+    admin:
+      menu:
+        riksdagen: Riksdagen
+        representatives: Ledamöter
+        bills: Lagförslag
+      riksdagen:
+        title: Riksdagen
+        representative:
+          title: Ledamöter
+          import_all: Importera alla
+          import: Importera
+          reload: Ladda om
+          name: Namn
+          status: Status
+        bill:
+          title: Lagförslag
+          import_all: Importera alla
+          import: Importera
+          reload: Ladda om
+          name: Namn
+          date: Publiceringsdatum
+          status: Status
+    riksdagen:
+      representative:
+        mp: Ledamot
+      bill:
+        step:
+          proposal: Förslag
+          citizen_proposals: Medborgarförslag
+          commission: Beredning
+          debate: Debatt
+          vote: Beslut
+
+
+
+
+
+
