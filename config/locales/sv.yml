@@ -17,6 +17,7 @@ sv:
           status: Status
         bill:
           title: Lagförslag
+          latest: Senaste
           import_all: Importera alla
           import: Importera
           reload: Ladda om
@@ -33,8 +34,13 @@ sv:
           commission: Beredning
           debate: Debatt
           vote: Beslut
-
-
+        component:
+          debate:
+            name: Debatter
+            riksdag_debate: Kammarensdebatt
+            description: Debatt i Riksdagen
+          proposal:
+            name: Medborgarförslag
 
 
 

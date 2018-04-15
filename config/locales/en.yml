@@ -17,6 +17,7 @@ en:
           status: Status
         bill:
           title: Bills
+          latest: Latest
           import_all: Import all
           import: Import
           reload: Reload
@@ -33,6 +34,14 @@ en:
           commission: Commission
           debate: Chamber debate
           vote: Vote
+        component:
+          debate:
+            name: Debates
+            riksdag_debate: Chamber debate
+            description: Debate in the parliament's main chamber
+          proposal:
+            name: Citizen proposals
+
 
 
 

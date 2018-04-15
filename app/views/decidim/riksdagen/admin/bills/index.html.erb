@@ -6,7 +6,20 @@
     </h2>
   </div>
   <div class="card-section">
-    <%= link_to t("decidim.admin.riksdagen.bill.import_all"), import_all_path, { class: "button small", method: :post } %>
+    <%= form_tag(import_bill_path, method: "post") do %>
+      <%= label_tag(:bill_id, "Proposal id:") %>
+      <%= text_field_tag(:bill_id) %>
+      <%= button_tag(t("decidim.admin.riksdagen.bill.import")) %>
+    <% end %>
+  </div>
+</div>
+<div class="card">
+  <div class="card-divider">
+    <h2 class="card-title">
+      <%= t('decidim.admin.riksdagen.bill.latest')%>
+    </h2>
+  </div>
+  <div class="card-section">
     <div class="table-scroll">
       <table class="table-list">
         <thead>

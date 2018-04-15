@@ -21,7 +21,6 @@ module Decidim
 
         def import_bill
           authorize! :show, Decidim::Riksdagen
-
           bill = get_bill(params[:bill_id])
           create_bill(bill)
         end
@@ -35,7 +34,7 @@ module Decidim
 
         def get_bill(id)
           bill = {}
-          bill['prop'] = get_dokument(id)
+          bill['prop'] = get_dokument(id).first
           bill['prop_status'] = get_dokument_status(id)
 
           if bill['prop_status'].key?('dokreferens')
@@ -78,12 +77,13 @@ module Decidim
           url = DATA_RIKSDAGEN_BASE_URL + "/dokumentlista/?sok=#{id}" +
                                           "&doktyp=prop&utformat=json#soktraff"
           data = JSON.parse(open(url).read)
-          data['dokumentlista']['dokument'][0]
+
+          data['dokumentlista']['dokument']
         end
 
         def get_video_stream(id)
           url = RIKSDAGEN_BASE_URL + "/api/videostream/get/#{id}"
-          Hash.from_xml(open(url).read).to_json
+          JSON.parse(open(url).read.to_s.encode('utf-8'))
         end
 
         def create_bill(bill)
@@ -91,6 +91,8 @@ module Decidim
           prop_status = bill['prop_status']
           bet = bill['bet']
           bet_status = bill['bet_status']
+          video = bill['videostream']
+
           process = Decidim::ParticipatoryProcess.find_or_initialize_by(slug: prop['id'])
           process.update!(
             slug: prop['id'],
@@ -121,21 +123,40 @@ module Decidim
             get_locales_for('decidim.riksdagen.bill.step.debate'),
             get_locales_for('decidim.riksdagen.bill.step.vote')
           ]
-          process_step_date = [
+          process_step_date_name = [
             'publicerad',
             'beredningsdag',
             'debattdag',
             'beslutsdag'
           ]
 
+          first_date = Time.parse(prop['publicerad'])
+
+          process_step_start_date = [
+            first_date,
+            first_date + 1.month + 1.day,
+            first_date + 2.month + 2.day,
+            first_date + 3.month + 3.day,
+            first_date + 3.month + 5.day,
+          ]
+
+          process_step_end_date = [
+            first_date + 1.month,
+            first_date + 2.month + 1.day,
+            first_date + 3.month + 2.day,
+            first_date + 3.month + 4.day,
+            first_date + 3.month + 6.day,
+          ]
+
           index = 0
+
           process_step.each do |step|
-            if !prop[process_step_date[index]].nil?
-              start_date = Time.parse(prop[process_step_date[index]])
-            end
-            if !prop[process_step_date[index + 1]].nil?
-              end_date = Time.parse(prop[process_step_date[index + 1]])
-            end
+            #if !prop[process_step_date[index]].nil?
+              #start_date = Time.parse(prop[process_step_date[index]])
+            #end
+            #if !prop[process_step_date[index + 1]].nil?
+            #  end_date = Time.parse(prop[process_step_date[index + 1]])
+            #end
 
             process_step = Decidim::ParticipatoryProcessStep.find_or_initialize_by(
               participatory_process: process,
@@ -143,17 +164,77 @@ module Decidim
             )
             process_step.update!(
               title: step,
-              description: "test",
-              start_date: start_date,
-              end_date: end_date
+              description: "No description yet",
+              start_date: process_step_start_date[index],
+              end_date: process_step_end_date[index]
             )
 
-            if index == 0
+            if index == 3
               process_step.update!(
                 active: true
               )
             end
             index += 1
+          end
+
+          proposals = Decidim::Component.find_or_initialize_by(
+            weight: 2,
+            manifest_name: :proposals,
+            participatory_space: process
+          )
+
+          proposals.update!(
+            name: get_locales_for('decidim.riksdagen.bill.component.proposal.name'),
+            published_at: Time.current
+          )
+
+          debates = Decidim::Component.find_or_initialize_by(
+            weight: 1.56,
+            manifest_name: :debates,
+            participatory_space: process
+          )
+          debates.update!(
+            name: get_locales_for('decidim.riksdagen.bill.component.debate.name'),
+            published_at: Time.current,
+            participatory_space: process
+          )
+
+          if !video.nil?
+
+            debate = Decidim::Debates::Debate.find_or_initialize_by(
+              component: debates,
+              title: get_locales_for('decidim.riksdagen.bill.component.debate.riksdag_debate')
+            )
+
+            Decidim::Comments::Comment.where(commentable: debate).destroy_all
+
+            debate.update!(
+              description: get_locales_for('decidim.riksdagen.bill.component.debate.description'),
+              instructions: get_locales_for('decidim.riksdagen.bill.component.debate.description'),
+              start_time: Time.current
+            )
+
+            intervention = video['videodata']
+            intervention = intervention[0]
+            intervention = intervention['speakers']
+
+            intervention.each do |int|
+              iid = int['commissionerurl'].split('_').last
+              mp = User.where(invitation_token: iid).first
+
+              if !mp.nil?
+                chunks = int['anftext'].scan(/.{1,1000}/)
+
+                chunks.each do |chunk|
+                  Decidim::Comments::Comment.create!(
+                    author: mp,
+                    commentable: debate,
+                    root_commentable: debate,
+                    body: chunk
+                  )
+                end
+              end
+            end
           end
         end
 
